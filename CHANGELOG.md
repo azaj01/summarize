@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.16 - Unreleased
+
+- Docs: document the macOS 13 minimum for standalone release archives.
+
 ## 0.21.15 - 2026-09-14
 
 - Security: backport the adm-zip destination-symlink extraction fix (GHSA-vwc7-r8mq-g2x9) while its new release completes the seven-day stabilization hold.

@@ -30,6 +30,10 @@ brew install summarize
 
 The Homebrew formula lives in `homebrew/core`. If Homebrew isn't available, use the npm route.
 
+### Standalone macOS archives
+
+The [macOS archives on GitHub Releases](https://github.com/steipete/summarize/releases/latest) contain standalone arm64 and x64 binaries. They require macOS 13 or newer and do not require Node.js.
+
 ### npx (no install)
 
 ```bash
