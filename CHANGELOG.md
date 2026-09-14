@@ -2,6 +2,8 @@
 
 ## 0.21.16 - Unreleased
 
+- Antigravity: steer print-mode text summaries away from tool narration and local file links, accounting for guidance in argv limits (#390, thanks @mvance).
+
 - Docs: document the macOS 13 minimum for standalone release archives.
 
 ## 0.21.15 - 2026-09-14
