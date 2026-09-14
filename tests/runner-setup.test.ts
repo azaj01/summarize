@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  stripCliLocaleArgs,
   applyWidthOverride,
   handleVersionFlag,
   prepareRunEnvironment,
@@ -11,6 +12,19 @@ import {
 import { captureStream as collectStream } from "./helpers/streams.js";
 
 describe("runner setup", () => {
+  it.each([["--locale"], ["--locale", "--json"], ["--locale="], ["--locale", "--", "file.txt"]])(
+    "rejects missing locale values without consuming other options: %j",
+    (...argv) => {
+      expect(() => stripCliLocaleArgs(argv)).toThrow("--locale requires a value");
+    },
+  );
+  it("strips only complete locale options before the separator", () => {
+    expect(stripCliLocaleArgs(["--locale", "tr", "--json", "--", "--locale"])).toEqual([
+      "--json",
+      "--",
+      "--locale",
+    ]);
+  });
   it("normalizes bare diarize URLs and honors --no-color", () => {
     const { normalizedArgv, preSeparatorArgv, envForRun } = prepareRunEnvironment(
       ["--diarize", "https://www.youtube.com/watch?v=abcdefghijk", "--no-color"],

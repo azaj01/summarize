@@ -1,4 +1,5 @@
 import type { CacheStats } from "@steipete/summarize-core/runtime";
+import { applyExtensionLocale, resolveExtensionLocale } from "../../lib/i18n";
 import { createModelPresetsController } from "../../lib/model-presets";
 import { defaultSettings, loadSettings, saveSettings } from "../../lib/settings";
 import { applyTheme, type ColorMode, type ColorScheme } from "../../lib/theme";
@@ -325,6 +326,7 @@ elements.automationPermissionsBtn.addEventListener("click", () => {
 
 async function load() {
   const [s] = await Promise.all([loadSettings(), daemonCapability?.initialize()]);
+  applyExtensionLocale(resolveExtensionLocale(s.uiLocale));
   activeProvider = s.provider;
   await modelPresets.refreshPresets(s.token);
   modelPresets.setValue(s.model);
@@ -400,6 +402,10 @@ bindOptionsInputs({
   copyToken,
   refreshModelsIfStale,
   defaultHoverPrompt: defaultSettings.hoverPrompt,
+});
+
+elements.uiLocaleEl.addEventListener("change", () => {
+  applyExtensionLocale(resolveExtensionLocale(elements.uiLocaleEl.value as "auto" | "en" | "tr"));
 });
 
 applyBuildInfo(elements.buildInfoEl, {

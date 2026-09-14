@@ -313,6 +313,7 @@ export function normalizeSettings(settings: Settings): Settings {
     model: normalizeModel(settings.model),
     length: normalizeLength(settings.length),
     language: normalizeLanguage(settings.language),
+    uiLocale: normalizeChoice(settings.uiLocale, ["auto", "en", "tr"], "en"),
     promptOverride: normalizePromptOverride(settings.promptOverride),
     hoverPrompt: normalizeHoverPrompt(settings.hoverPrompt),
     autoCliOrder: normalizeAutoCliOrder(settings.autoCliOrder),
@@ -342,6 +343,11 @@ export function normalizeStoredSettings(
         ? raw.daemonHintDismissed
         : defaultSettings.daemonHintDismissed,
     model: normalizeModel(raw.model, raw),
+    uiLocale: normalizeChoice(
+      raw.uiLocale,
+      ["auto", "en", "tr"],
+      Object.keys(raw).length === 0 ? defaultSettings.uiLocale : "en",
+    ),
     autoSummarize:
       typeof raw.autoSummarize === "boolean" ? raw.autoSummarize : defaultSettings.autoSummarize,
     hoverSummaries:

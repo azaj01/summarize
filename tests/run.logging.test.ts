@@ -1,8 +1,22 @@
 import { describe, expect, it, vi } from "vitest";
 import { formatLlmRetryNotice } from "../src/llm/generate-text-shared.js";
-import { createRetryLogger } from "../src/run/logging.js";
+import { createRetryLogger, writeVerbose } from "../src/run/logging.js";
 
 describe("run/logging", () => {
+  it("preserves raw diagnostic data in Turkish mode", () => {
+    const write = vi.fn();
+    writeVerbose(
+      { write } as unknown as NodeJS.WritableStream,
+      true,
+      "Copy failed: /Projects (old)/cache.json",
+      false,
+      { SUMMARIZE_LOCALE: "tr" },
+    );
+    expect(write).toHaveBeenCalledWith(
+      expect.stringContaining("Copy failed: /Projects (old)/cache.json"),
+    );
+  });
+
   it.each([
     ["Empty summary", "empty output"],
     [new Error("timed out"), "timeout"],

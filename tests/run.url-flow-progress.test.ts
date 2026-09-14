@@ -63,6 +63,20 @@ function createContext(overrides: Record<string, unknown> = {}) {
 }
 
 describe("url flow progress", () => {
+  it("translates known full statuses while preserving opaque diagnostic suffixes", () => {
+    const ctx = createContext({
+      io: { env: { SUMMARIZE_LOCALE: "tr" }, stderr: { write: vi.fn() } },
+      flags: { progressEnabled: false },
+    });
+    const progress = createUrlFlowProgress({ ctx: ctx as never, theme: createTheme() as never });
+    expect(progress.renderStatusFromText("X: fetching via syndication API…")).toBe(
+      "<l>X</l><d>: Syndication API üzerinden alınıyor…</d>",
+    );
+    expect(progress.renderStatusFromText("Error: Copy failed: /path/cache.json")).toContain(
+      "Copy failed: /path/cache.json",
+    );
+    progress.stopProgress();
+  });
   beforeEach(() => {
     vi.clearAllMocks();
   });

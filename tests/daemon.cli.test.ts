@@ -129,6 +129,39 @@ describe("daemon cli", () => {
     Object.defineProperty(process, "platform", { value: originalPlatform });
   });
 
+  it.each(["darwin", "linux", "win32"])(
+    "localizes daemon status framing on %s without rewriting connection values",
+    async (platform) => {
+      Object.defineProperty(process, "platform", { value: platform });
+      mocks.readDaemonConfig.mockResolvedValue({ token: "test-token", port: 9931 });
+      mocks.isLaunchAgentLoaded.mockResolvedValue(true);
+      mocks.isSystemdServiceEnabled.mockResolvedValue(true);
+      mocks.isScheduledTaskInstalled.mockResolvedValue(true);
+      const stdout = new PassThrough();
+      let text = "";
+      stdout.on("data", (chunk) => {
+        text += chunk.toString();
+      });
+      await handleDaemonRequest({
+        normalizedArgv: ["daemon", "status"],
+        envForRun: { SUMMARIZE_LOCALE: "tr" },
+        fetchImpl: vi.fn(async () => new Response("{}")) as typeof fetch,
+        stdout,
+        stderr: new PassThrough(),
+      });
+      expect(text).toContain("Chrome yerel mesajlaşma ana makinesi: kurulu");
+      expect(text).toContain("Daemon çalışıyor: 127.0.0.1:9931");
+      expect(text).toContain("Kimlik doğrulama: tamam");
+      expect(text).toContain(
+        platform === "darwin"
+          ? "LaunchAgent: yüklendi"
+          : platform === "linux"
+            ? "systemd: etkin"
+            : "Scheduled Task: kayıtlı",
+      );
+    },
+  );
+
   it("applies daemon snapshot env to process.env for child processes on run (#99)", async () => {
     mocks.readDaemonConfig.mockResolvedValueOnce({
       token: "test-token",

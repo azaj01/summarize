@@ -181,6 +181,7 @@ export async function runCliMain({
 
     const message =
       error instanceof Error ? error.message : error ? String(error) : "Unknown error";
+    // Opaque errors can match UI catalog keys; preserve the original diagnostic.
     stderr.write(`${stripAnsi(message)}\n`);
     setExitCode(typeof exitCode === "number" ? exitCode : 1);
   } finally {

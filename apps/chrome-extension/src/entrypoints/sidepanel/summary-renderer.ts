@@ -116,6 +116,7 @@ export function renderSummaryEmptyState({
   if (state.detail) {
     const detail = document.createElement("p");
     detail.className = "renderEmpty__detail";
+    detail.dataset.localeIgnore = "true";
     detail.textContent = state.detail;
     wrapper.append(detail);
   }
@@ -185,6 +186,7 @@ export function renderSummaryMarkdownDisplay({
       hostEl.innerHTML = "";
       const markdownHost = document.createElement("div");
       markdownHost.className = "render__markdownBody";
+      markdownHost.dataset.localeIgnore = "true";
       markdownHost.innerHTML = md.render(linkifyTimestamps(displayMarkdown));
       if (copyButtonEl) {
         configureCopyButton({ button: copyButtonEl, text: displayMarkdown, headerSetStatus });

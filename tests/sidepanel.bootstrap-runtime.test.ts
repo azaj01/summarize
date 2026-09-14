@@ -39,6 +39,7 @@ describe("sidepanel bootstrap runtime", () => {
       fontFamily: "IBM Plex Sans",
       model: "openai/gpt-5.4",
       token: "",
+      uiLocale: "en" as const,
     };
 
     bootstrapSidepanel({
@@ -46,6 +47,7 @@ describe("sidepanel bootstrap runtime", () => {
         calls.push("ensure");
       },
       loadSettings: async () => loadedSettings,
+      applyLocale: (locale) => calls.push(`locale:${locale}`),
       panelState: panelStateStore,
 
       typographyController: {
@@ -80,6 +82,8 @@ describe("sidepanel bootstrap runtime", () => {
     expect(calls).toContain("hide-automation");
     expect(calls).toContain("model-disabled:true");
     expect(calls).toContain("ready");
+    expect(calls).toContain("locale:en");
+    expect(bindingSpies.bindSettingsStorage.mock.calls[0]?.[0].applyLocale).toBeTypeOf("function");
     expect(calls).toContain("ping");
     expect(panelStateStore.panelSession).toMatchObject({
       autoSummarize: true,
@@ -109,7 +113,9 @@ describe("sidepanel bootstrap runtime", () => {
         fontFamily: "Skolar",
         model: "openai/gpt-5.4",
         token: "abc123",
+        uiLocale: "en",
       }),
+      applyLocale: (locale) => calls.push(`locale:${locale}`),
       panelState: panelStateStore,
 
       typographyController: {

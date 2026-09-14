@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 import { readCliOptionValue } from "../cli-args.js";
 import { handleDaemonRequest } from "../daemon/cli.js";
+import { resolveCliLocaleFromArgs, translateCliText } from "../locale.js";
 import { refreshFree } from "../refresh-free.js";
 import {
   applyHelpStyle,
@@ -27,24 +28,26 @@ export function handleHelpRequest({
   stderr,
 }: HelpContext): boolean {
   if (normalizedArgv[0]?.toLowerCase() !== "help") return false;
+  const locale = resolveCliLocaleFromArgs(normalizedArgv, envForRun);
+  const writeHelp = (text: string) => stdout.write(`${translateCliText(text, locale)}\n`);
   const topic = normalizedArgv[1]?.toLowerCase();
   if (topic === "refresh-free") {
-    stdout.write(`${buildRefreshFreeHelp()}\n`);
+    writeHelp(buildRefreshFreeHelp());
     return true;
   }
   if (topic === "daemon") {
-    stdout.write(`${buildDaemonHelp()}\n`);
+    writeHelp(buildDaemonHelp());
     return true;
   }
   if (topic === "status") {
-    stdout.write(`${buildStatusHelp()}\n`);
+    writeHelp(buildStatusHelp());
     return true;
   }
   if (topic === "slides") {
     const slidesProgram: Command = buildSlidesProgram();
     slidesProgram.configureOutput({
       writeOut(str) {
-        stdout.write(str);
+        stdout.write(translateCliText(str, locale));
       },
       writeErr(str) {
         stderr.write(str);
@@ -55,14 +58,14 @@ export function handleHelpRequest({
     return true;
   }
   if (topic === "transcriber") {
-    stdout.write(`${buildTranscriberHelp()}\n`);
+    writeHelp(buildTranscriberHelp());
     return true;
   }
 
   const program: Command = buildProgram();
   program.configureOutput({
     writeOut(str) {
-      stdout.write(str);
+      stdout.write(translateCliText(str, locale));
     },
     writeErr(str) {
       stderr.write(str);
@@ -115,7 +118,9 @@ export async function handleRefreshFreeRequest({
   })();
 
   if (help) {
-    stdout.write(`${buildRefreshFreeHelp()}\n`);
+    stdout.write(
+      `${translateCliText(buildRefreshFreeHelp(), resolveCliLocaleFromArgs(normalizedArgv, envForRun))}\n`,
+    );
     return true;
   }
 

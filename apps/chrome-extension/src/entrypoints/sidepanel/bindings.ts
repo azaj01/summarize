@@ -189,11 +189,13 @@ export function bindSettingsStorage({
   panelState,
 
   applyChatEnabled,
+  applyLocale,
   hideAutomationNotice,
 }: {
   panelState: PanelState;
 
   applyChatEnabled: () => void;
+  applyLocale: (locale: Settings["uiLocale"]) => void;
   hideAutomationNotice: () => void;
 }) {
   chrome.storage.onChanged.addListener((changes, areaName) => {
@@ -207,6 +209,15 @@ export function bindSettingsStorage({
           ...(nextSettings as Partial<Settings>),
         },
       });
+    }
+    const nextUiLocale = (nextSettings as Partial<Settings>).uiLocale;
+    const previousUiLocale = (changes.settings?.oldValue as Partial<Settings> | undefined)
+      ?.uiLocale;
+    if (
+      (nextUiLocale === "en" || nextUiLocale === "tr" || nextUiLocale === "auto") &&
+      nextUiLocale !== previousUiLocale
+    ) {
+      applyLocale(nextUiLocale);
     }
     const nextChatEnabled = (nextSettings as { chatEnabled?: unknown }).chatEnabled;
     if (typeof nextChatEnabled === "boolean") {

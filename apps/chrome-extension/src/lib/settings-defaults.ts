@@ -4,6 +4,7 @@ import { defaultColorMode, defaultColorScheme } from "./theme";
 export const DEFAULT_DAEMON_PORT = "8787";
 
 export const defaultSettings: Settings = {
+  uiLocale: "auto",
   token: "",
   daemonPort: DEFAULT_DAEMON_PORT,
   summaryRuntime: "direct",

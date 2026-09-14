@@ -1,3 +1,4 @@
+import { resolveCliLocaleFromEnv, translateCliText } from "../locale.js";
 import { ansi, isRichTty, supportsColor } from "../run/terminal.js";
 import type {
   BenchmarkedOpenRouterModel,
@@ -22,6 +23,7 @@ export class RefreshFreeReporter {
   readonly #verbose: boolean;
   readonly #color: boolean;
   readonly #isTty: boolean;
+  readonly #locale: "en" | "tr";
   #lastProgressPrint = 0;
 
   constructor({
@@ -37,6 +39,7 @@ export class RefreshFreeReporter {
     this.#verbose = verbose;
     this.#color = supportsColor(stderr, env);
     this.#isTty = isRichTty(stderr);
+    this.#locale = resolveCliLocaleFromEnv(env);
   }
 
   #ansi(code: string, text: string) {
@@ -48,7 +51,7 @@ export class RefreshFreeReporter {
   }
 
   #commandName() {
-    return this.#ansi("1;36", "Refresh Free");
+    return this.#ansi("1;36", translateCliText("Refresh Free", this.#locale));
   }
 
   #note(line: string) {
@@ -61,7 +64,9 @@ export class RefreshFreeReporter {
   }
 
   fetchingCatalog() {
-    this.#stderr.write(`${this.#commandName()}: fetching OpenRouter models…\n`);
+    this.#stderr.write(
+      `${this.#commandName()}: ${translateCliText("fetching OpenRouter models…", this.#locale)}\n`,
+    );
   }
 
   filteredOldModels({
@@ -77,7 +82,7 @@ export class RefreshFreeReporter {
   }) {
     if (count <= 0) return;
     this.#stderr.write(
-      `${this.#commandName()}: filtered ${count}/${total} old models (>${maxAgeDays}d)\n`,
+      `${this.#commandName()}: ${translateCliText(`filtered ${count}/${total} old models (>${maxAgeDays}d)`, this.#locale)}\n`,
     );
     if (this.#verbose) {
       for (const id of ids) this.#stderr.write(`${this.#dim(`skip ${id}`)}\n`);
@@ -97,7 +102,7 @@ export class RefreshFreeReporter {
   }) {
     if (count <= 0) return;
     this.#stderr.write(
-      `${this.#commandName()}: filtered ${count}/${total} small models (<${minParamB}B)\n`,
+      `${this.#commandName()}: ${translateCliText(`filtered ${count}/${total} small models (<${minParamB}B)`, this.#locale)}\n`,
     );
     if (this.#verbose) {
       for (const id of ids) this.#stderr.write(`${this.#dim(`skip ${id}`)}\n`);
@@ -116,7 +121,7 @@ export class RefreshFreeReporter {
     timeoutMs: number;
   }) {
     this.#stderr.write(
-      `${this.#commandName()}: found ${modelCount} :free models; testing (runs=${totalRuns}, concurrency=${concurrency}, timeout=${formatRefreshFreeDuration(timeoutMs)})…\n`,
+      `${this.#commandName()}: ${translateCliText(`found ${modelCount} :free models; testing (runs=${totalRuns}, concurrency=${concurrency}, timeout=${formatRefreshFreeDuration(timeoutMs)})…`, this.#locale)}\n`,
     );
   }
 
@@ -136,7 +141,10 @@ export class RefreshFreeReporter {
     if (now - this.#lastProgressPrint < everyMs) return;
     this.#lastProgressPrint = now;
     const elapsedSec = Math.round(elapsedMs / 100) / 10;
-    const line = `Refresh Free: tested ${done}/${total}, ok=${okCount} (elapsed ${elapsedSec}s)…`;
+    const line = translateCliText(
+      `Refresh Free: tested ${done}/${total}, ok=${okCount} (elapsed ${elapsedSec}s)…`,
+      this.#locale,
+    );
     if (this.#isTty) {
       this.#stderr.write(`\x1b[2K\r${line}`);
     } else {
@@ -146,7 +154,7 @@ export class RefreshFreeReporter {
 
   benchmarkSuccess({ modelId, latencyMs }: { modelId: string; latencyMs: number }) {
     this.#note(
-      `${this.#ansi("1;32", "ok")} ${modelId} ${this.#dim(`(${formatRefreshFreeDuration(latencyMs)})`)}`,
+      `${this.#ansi("1;32", translateCliText("ok", this.#locale))} ${modelId} ${this.#dim(`(${formatRefreshFreeDuration(latencyMs)})`)}`,
     );
   }
 
@@ -160,7 +168,9 @@ export class RefreshFreeReporter {
     message: string;
   }) {
     if (!this.#verbose) return;
-    this.#note(`${this.#ansi("1;31", "fail")} ${modelId} ${this.#dim(`(${kind})`)}: ${message}`);
+    this.#note(
+      `${this.#ansi("1;31", translateCliText("fail", this.#locale))} ${modelId} ${this.#dim(`(${kind})`)}: ${message}`,
+    );
   }
 
   cooldown(remainingMs: number) {
@@ -211,12 +221,16 @@ export class RefreshFreeReporter {
   }
 
   selected(candidateCount: number) {
-    this.#stderr.write(`${this.#commandName()}: selected ${candidateCount} candidates.\n`);
+    this.#stderr.write(
+      `${this.#commandName()}: ${translateCliText(`selected ${candidateCount} candidates.`, this.#locale)}\n`,
+    );
   }
 
   selectedModels(selectedIds: string[], refined: BenchmarkedOpenRouterModel[]) {
     const byId = new Map(refined.map((model) => [model.openrouterModelId, model] as const));
-    this.#stderr.write(`\n${this.#ansi("1;36", "Selected")} (sorted, Δ latency)\n`);
+    this.#stderr.write(
+      `\n${this.#ansi("1;36", translateCliText("Selected", this.#locale))} (${translateCliText("sorted, Δ latency", this.#locale)})\n`,
+    );
     for (const modelId of selectedIds) {
       const result = byId.get(modelId);
       if (!result) continue;

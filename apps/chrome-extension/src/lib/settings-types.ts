@@ -1,4 +1,5 @@
 import type { SummarizeRequestOverrides } from "@steipete/summarize-core/runtime";
+import type { ExtensionLocaleSetting } from "./i18n";
 import type { ColorMode, ColorScheme } from "./theme";
 
 type RequestModeSetting = "" | NonNullable<SummarizeRequestOverrides["mode"]>;
@@ -9,6 +10,7 @@ type YoutubeModeSetting = "" | NonNullable<SummarizeRequestOverrides["youtube"]>
 type TranscriberSetting = "" | NonNullable<SummarizeRequestOverrides["transcriber"]>;
 
 export type Settings = {
+  uiLocale: ExtensionLocaleSetting;
   token: string;
   daemonPort: string;
   summaryRuntime: SummaryRuntime;

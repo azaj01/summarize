@@ -1,4 +1,5 @@
 import type { LinkPreviewProgressEvent } from "@steipete/summarize-core/content";
+import { type CliLocale, hasTurkishTranslation, translateCliText } from "../locale.js";
 import { formatBytes } from "./format.js";
 import type { OscProgressController } from "./osc-progress.js";
 import { createFetchHtmlProgressRenderer } from "./progress/fetch-html.js";
@@ -10,7 +11,9 @@ export function createWebsiteProgress({
   spinner,
   oscProgress,
   theme,
+  locale = "en",
 }: {
+  locale?: CliLocale;
   enabled: boolean;
   spinner: { setText: (text: string) => void };
   oscProgress?: OscProgressController | null;
@@ -26,8 +29,17 @@ export function createWebsiteProgress({
 
   const styleLabel = (text: string) => (theme ? theme.label(text) : text);
   const styleDim = (text: string) => (theme ? theme.dim(text) : text);
-  const renderStatus = (label: string, detail: string) =>
-    theme ? `${styleLabel(label)}${styleDim(detail)}` : `${label}${detail}`;
+  const renderStatus = (label: string, detail: string) => {
+    const message = `${label}${detail}`;
+    if (hasTurkishTranslation(message)) {
+      const translated = translateCliText(message, locale);
+      const separator = translated.indexOf(":");
+      return theme && separator >= 0
+        ? `${styleLabel(translated.slice(0, separator))}${styleDim(translated.slice(separator))}`
+        : translated;
+    }
+    return theme ? `${styleLabel(label)}${styleDim(detail)}` : message;
+  };
   const renderTweetCliLabel = (client?: "xurl" | "bird" | null) =>
     client === "xurl" ? "Xurl" : client === "bird" ? "Bird" : "X";
 

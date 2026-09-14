@@ -2,6 +2,29 @@ import { describe, expect, it, vi } from "vitest";
 import { createWebsiteProgress } from "../src/tty/website-progress.js";
 
 describe("tty website progress", () => {
+  it("renders Syndication progress in Turkish and preserves byte counts", () => {
+    const setText = vi.fn();
+    const progress = createWebsiteProgress({ enabled: true, spinner: { setText }, locale: "tr" });
+    progress?.onProgress({
+      kind: "twitter-syndication-start",
+      url: "https://x.com/example/status/20",
+    });
+    expect(setText).toHaveBeenLastCalledWith("X: Syndication API üzerinden alınıyor…");
+    progress?.onProgress({
+      kind: "twitter-syndication-done",
+      url: "https://x.com/example/status/20",
+      ok: false,
+      textBytes: null,
+    });
+    expect(setText).toHaveBeenLastCalledWith("X: Syndication başarısız; alternatif deneniyor…");
+    progress?.onProgress({
+      kind: "twitter-syndication-done",
+      url: "https://x.com/example/status/20",
+      ok: true,
+      textBytes: 1024,
+    });
+    expect(setText).toHaveBeenLastCalledWith("X: got 1.0 KB…");
+  });
   it("returns null when disabled", () => {
     expect(createWebsiteProgress({ enabled: false, spinner: { setText: vi.fn() } })).toBeNull();
   });
