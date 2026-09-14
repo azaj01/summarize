@@ -2,6 +2,8 @@
 
 ## 0.21.16 - Unreleased
 
+- Twitter/X: add the unauthenticated Syndication API between CLI clients and Nitter, preserving explicit transcript requests and complete-text fallbacks (#401, thanks @mvance).
+
 - Antigravity: offload oversized prompts to a private temporary document, preserve task instructions, and clean up after success, failure, or timeout (#400, thanks @mvance).
 
 - Antigravity: steer print-mode text summaries away from tool narration and local file links, accounting for guidance in argv limits (#390, thanks @mvance).
