@@ -1,6 +1,6 @@
 {
   "name": "@steipete/summarize-core",
-  "version": "0.21.14",
+  "version": "0.21.15",
   "description": "Summarize core library (content extraction + prompts).",
   "files": [
     "dist",

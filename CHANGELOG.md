@@ -1,8 +1,7 @@
 # Changelog
 
-## 0.21.15 - Unreleased
+## 0.21.15 - 2026-09-14
 
-- Maintenance: refresh stabilized transitive Undici, AWS/Smithy, Hugging Face Jinja, WXT browser, and build-tool dependencies.
 - Security: backport the adm-zip destination-symlink extraction fix (GHSA-vwc7-r8mq-g2x9) while its new release completes the seven-day stabilization hold.
 - Slide text: avoid splitting Unicode surrogate pairs when shortening transcript or OCR text.
 - ONNX transcription: keep staged audio available until inference exits and discard interrupted model downloads so retries cannot reuse partial artifacts.
@@ -10,6 +9,7 @@
 - Refresh Free: honor `FORCE_COLOR=0` and use the same color-override precedence as the rest of the CLI.
 - Browser automation: detect immediate User Scripts execution support and give older Chrome versions an accurate upgrade requirement.
 - Cache statistics: close SQLite connections after failed reads and ignore invalid cache-kind names.
+- Maintenance: refresh stabilized transitive Undici, AWS/Smithy, Hugging Face Jinja, WXT browser, and build-tool dependencies.
 - Maintenance: refresh stabilized Pi AI, tokentally, Playwright, and Bun tooling, enforce formatting in CI, and reuse the installation build.
 - Development: update stabilized Chrome typings, reuse Vitest source transforms between runs, and keep automatic worker counts within the available CPU budget.
 - CI: enforce unused-code checks and rebuild Pages when any documentation helper changes.
