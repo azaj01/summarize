@@ -1,17 +1,14 @@
 # Changelog
 
-## 0.21.16 - Unreleased
+## 0.22.0 - 2026-09-14
 
-- Automation: let the element picker’s Cancel button dismiss selection instead of intercepting its click (#398, thanks @husodrn46).
-
-- Localization: add Turkish CLI and extension interfaces while preserving English for existing profiles, independent summary language, and original user content and diagnostics (#398, thanks @husodrn46).
+**Highlights:** Twitter/X Syndication fallback and Turkish interfaces, plus Antigravity print-mode steering and large-prompt offloading.
 
 - Twitter/X: add the unauthenticated Syndication API between CLI clients and Nitter, preserving explicit transcript requests and complete-text fallbacks (#401, thanks @mvance).
-
+- Localization: add Turkish CLI and extension interfaces while preserving English for existing profiles, independent summary language, and original user content and diagnostics (#398, thanks @husodrn46).
 - Antigravity: offload oversized prompts to a private temporary document, preserve task instructions, and clean up after success, failure, or timeout (#400, thanks @mvance).
-
 - Antigravity: steer print-mode text summaries away from tool narration and local file links, accounting for guidance in argv limits (#390, thanks @mvance).
-
+- Automation: let the element picker’s Cancel button dismiss selection instead of intercepting its click (#398, thanks @husodrn46).
 - Docs: document the macOS 13 minimum for standalone release archives.
 
 ## 0.21.15 - 2026-09-14
