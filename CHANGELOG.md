@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.22.1 - Unreleased
+
 ## 0.22.0 - 2026-09-14
 
 **Highlights:** Twitter/X Syndication fallback and Turkish interfaces, plus Antigravity print-mode steering and large-prompt offloading.
