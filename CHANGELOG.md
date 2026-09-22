@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.23.0 - Unreleased
+## 0.23.0 - 2026-09-21
+
+**Highlights:** complete multilingual interfaces, safer guarded networking, and resilient cache and daemon logging.
 
 - Localization: add complete German, French, Spanish, Italian, Brazilian Portuguese, Dutch, Polish, Russian, Japanese, Simplified/Traditional Chinese, and Korean interfaces alongside English and Turkish, with typed ICU catalogs, system/browser locale negotiation, and CI enforcement for missing, stale, mismatched, and uncatalogued messages; thanks @husodrn46 for the original Turkish support.
 - Network: handle bodyless and invalid responses in the DNS-pinned transport without crashing, and honor cancellation carried by Request objects.
@@ -10,6 +12,7 @@
 - Daemon logging: recreate a log directory removed while the daemon is running so later writes recover automatically.
 - Maintenance: refresh stabilized runtime, browser media, and development dependencies; replace local security backports with upstream fixes while retaining the asynchronous ZIP-extraction stop fix (#482, thanks @dependabot).
 - Pricing: retain fetched model pricing when the home directory or disk cache is unavailable.
+- Release docs: use the Chrome archive helper so the manifest stays at the ZIP root, and clarify that CI publishes the verified release assets.
 
 ## 0.22.0 - 2026-09-14
 
