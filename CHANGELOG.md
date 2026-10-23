@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Maintenance: share sidepanel animation, slide rendering, and browser AI session helpers while preserving their existing behavior (#510, thanks @copiumnicus).
 - Antigravity: honor `cli.agy.model` (previously ignored) and support `cli/agy/<model>`; require valid model settings, report failed model selections with `agy models` guidance, and retain the active session default when no model is set (#518, thanks @kevin820606).
 
 ## 0.25.3 - 2026-10-20
